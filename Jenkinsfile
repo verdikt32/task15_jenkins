@@ -9,7 +9,7 @@ pipeline {
         PROD_SERVER     = "3.94.206.128"              // замени
         DEV_PORT        = "8080"
         PROD_PORT       = "8080"
-        APP_PORT        = "3000"                        // порт внутри контейнера
+        APP_PORT        = "80"                        // порт внутри контейнера
     }
 
     options {
