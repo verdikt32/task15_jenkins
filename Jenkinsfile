@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         REGISTRY        = "ghcr.io"
-        GITHUB_USER     = "alexeishkurat@gmail.com"        // замени
+        GITHUB_USER     = "verdikt32"        // замени
         IMAGE_NAME      = "nginx-web-app"               // замени
         DEV_SERVER      = "54.82.206.167"               // замени
         PROD_SERVER     = "3.94.206.128"              // замени
