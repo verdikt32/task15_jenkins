@@ -13,4 +13,4 @@ COPY --chown=nginx:nginx \
 
 USER nginx
 
-EXPOSE 80
+EXPOSE 8080
