@@ -9,7 +9,7 @@ pipeline {
         PROD_SERVER     = "13.221.225.222"            
         DEV_PORT        = "8081"
         PROD_PORT       = "8082"
-        APP_PORT        = "80"              // порт внутри контейнера
+        APP_PORT        = "80"
     }
 
     options {
@@ -57,7 +57,7 @@ pipeline {
 
         stage('Build Image') {
             steps {
-                sh "docker build -t ${env.IMAGE_TAG} ."
+                sh 'docker build -t $IMAGE_TAG .'
             }
         }
 
@@ -68,35 +68,34 @@ pipeline {
                     usernameVariable: 'GHCR_USER',
                     passwordVariable: 'GHCR_TOKEN'
                 )]) {
-                    sh """
-                        echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin
-                        docker push ${env.IMAGE_TAG}
-                    """
+                    sh '''
+                        echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+                        docker push $IMAGE_TAG
+                    '''
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sshagent([env.SSH_KEY]) {
+                sshagent(["${env.SSH_KEY}"]) {
                     withCredentials([usernamePassword(
                         credentialsId: 'ghcr-credentials',
                         usernameVariable: 'GHCR_USER',
                         passwordVariable: 'GHCR_TOKEN'
                     )]) {
-                        sh """
-                            ssh -o StrictHostKeyChecking=no ubuntu@${env.SERVER} '
-                                echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin &&
-                                docker pull ${env.IMAGE_TAG} &&
-                                docker stop app-jenkins-${env.ENV_NAME} || true &&
-                                docker rm   app-jenkins-${env.ENV_NAME} || true &&
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ubuntu@$SERVER \
+                                "echo $GHCR_TOKEN | docker login ghcr.io -u $GHCR_USER --password-stdin &&
+                                docker pull $IMAGE_TAG &&
+                                docker stop app-$ENV_NAME || true &&
+                                docker rm   app-$ENV_NAME || true &&
                                 docker run -d \
-                                    --name app-${env.ENV_NAME} \
+                                    --name app-$ENV_NAME \
                                     --restart unless-stopped \
-                                    -p ${env.HOST_PORT}:${APP_PORT} \
-                                    ${env.IMAGE_TAG}
-                            '
-                        """
+                                    -p $HOST_PORT:$APP_PORT \
+                                    $IMAGE_TAG"
+                        '''
                     }
                 }
             }
@@ -106,13 +105,8 @@ pipeline {
     post {
         always {
             script {
-                // Удаляем локальный образ после пуша
-                sh "docker rmi ${env.IMAGE_TAG} || true"
-
-                // Чистим dangling images (слои без тега)
-                sh "docker image prune -f"
-
-                // Чистим workspace
+                sh 'docker rmi $IMAGE_TAG || true'
+                sh 'docker image prune -f'
                 cleanWs()
             }
         }
