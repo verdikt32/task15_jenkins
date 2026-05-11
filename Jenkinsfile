@@ -5,8 +5,8 @@ pipeline {
         REGISTRY        = "ghcr.io"
         GITHUB_USER     = "verdikt32" 
         IMAGE_NAME      = "nginx-web-app"            
-        DEV_SERVER      = "54.82.206.167"             
-        PROD_SERVER     = "3.94.206.128"            
+        DEV_SERVER      = "54.224.101.105"             
+        PROD_SERVER     = "13.221.225.222"            
         DEV_PORT        = "8081"
         PROD_PORT       = "8082"
         APP_PORT        = "80"              // порт внутри контейнера
