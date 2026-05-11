@@ -3,13 +3,13 @@ pipeline {
 
     environment {
         REGISTRY        = "ghcr.io"
-        GITHUB_USER     = "verdikt32"        // замени
-        IMAGE_NAME      = "nginx-web-app"               // замени
-        DEV_SERVER      = "54.82.206.167"               // замени
-        PROD_SERVER     = "3.94.206.128"              // замени
-        DEV_PORT        = "8080"
-        PROD_PORT       = "8080"
-        APP_PORT        = "80"                        // порт внутри контейнера
+        GITHUB_USER     = "verdikt32" 
+        IMAGE_NAME      = "nginx-web-app"            
+        DEV_SERVER      = "54.82.206.167"             
+        PROD_SERVER     = "3.94.206.128"            
+        DEV_PORT        = "8081"
+        PROD_PORT       = "8082"
+        APP_PORT        = "80"              // порт внутри контейнера
     }
 
     options {
@@ -88,8 +88,8 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no ubuntu@${env.SERVER} '
                                 echo "${GHCR_TOKEN}" | docker login ghcr.io -u "${GHCR_USER}" --password-stdin &&
                                 docker pull ${env.IMAGE_TAG} &&
-                                docker stop app-${env.ENV_NAME} || true &&
-                                docker rm   app-${env.ENV_NAME} || true &&
+                                docker stop app-jenkins-${env.ENV_NAME} || true &&
+                                docker rm   app-jenkins-${env.ENV_NAME} || true &&
                                 docker run -d \
                                     --name app-${env.ENV_NAME} \
                                     --restart unless-stopped \
