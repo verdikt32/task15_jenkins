@@ -5,10 +5,10 @@ pipeline {
         REGISTRY        = "ghcr.io"
         GITHUB_USER     = "verdikt32" 
         IMAGE_NAME      = "nginx-web-app"            
-        DEV_SERVER      = "54.224.101.105"             
-        PROD_SERVER     = "13.221.225.222"            
-        DEV_PORT        = "8081"
-        PROD_PORT       = "8082"
+        DEV_SERVER      = "18.206.98.217"             
+        PROD_SERVER     = "54.163.118.83"            
+        DEV_PORT        = "8080"
+        PROD_PORT       = "8080"
         APP_PORT        = "80"
     }
 
